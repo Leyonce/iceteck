@@ -12,6 +12,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.apache.taverna.mobile.R;
 import org.apache.taverna.mobile.activities.RunResult;
@@ -78,7 +79,8 @@ public class WorkflowOpen extends AsyncTask<String, Void, String> {
                     br.close();
                 }
                 catch (IOException e) {
-                    //You'll need to add proper error handling here
+                    e.printStackTrace();
+                    // need to add proper error handling here
                 }
 
                 String data = "{\"document\":\"data:application/octet-stream;base64," +
@@ -113,6 +115,7 @@ public class WorkflowOpen extends AsyncTask<String, Void, String> {
             }catch (IOException e){
                 e.printStackTrace();
                 sb.append("Error reading remote workflow. Please try again later");
+
             }
 
             return sb.toString();

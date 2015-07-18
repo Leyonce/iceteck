@@ -50,6 +50,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.thebuzzmedia.sjxp.XMLParserException;
+
 import org.apache.taverna.mobile.R;
 import org.apache.taverna.mobile.fragments.FavoriteFragment;
 import org.apache.taverna.mobile.fragments.NavigationDrawerFragment;
@@ -57,6 +59,8 @@ import org.apache.taverna.mobile.fragments.WorkflowItemFragment;
 import org.apache.taverna.mobile.fragments.workflowdetails.WorkflowOpen;
 
 import java.io.File;
+import java.io.IOError;
+import java.io.IOException;
 
 public class DashboardMainActivity extends ActionBarActivity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks{
@@ -168,8 +172,23 @@ public class DashboardMainActivity extends ActionBarActivity
         if(resultCode == RESULT_OK){
             if(requestCode == SELECT_WORKFLOW){
                 String workflowPath = data.getData().getPath();
-                Toast.makeText(getBaseContext(), "Path: "+workflowPath, Toast.LENGTH_LONG).show();
-                new WorkflowOpen(this).execute(workflowPath);
+                //Toast.makeText(getBaseContext(), "Path: "+workflowPath, Toast.LENGTH_LONG).show();
+
+                   new WorkflowOpen(this).execute(workflowPath);
+              if (resultCode == -1){
+                  Toast.makeText(getBaseContext(), "Error: Not XML FILE", Toast.LENGTH_LONG).show();
+                  Intent workflowSelectIntent = new Intent(Intent.ACTION_GET_CONTENT)
+                          .setDataAndTypeAndNormalize(Uri.parse(String.format("%s%s%s",
+                                          Environment.getExternalStorageDirectory(),
+                                          File.separator, APP_DIRECTORY_NAME)),
+                                  "application/vnd.taverna.t2flow+xml");
+
+                  Intent loadWorkflowIntent = Intent.createChooser(workflowSelectIntent,
+                          "Choose Workflow (.t2flow)");
+                  startActivityForResult(loadWorkflowIntent, SELECT_WORKFLOW);
+              }
+
+
             }
         }
     }
